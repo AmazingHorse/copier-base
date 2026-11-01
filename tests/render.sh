@@ -50,12 +50,12 @@ tar -C "$source_dir" --exclude=.git -cf - . | tar -C "$fixture" -xf -
 git -C "$fixture" init -b main
 git -C "$fixture" add .
 git -C "$fixture" -c core.hooksPath=/dev/null commit -m 'feat: create test template'
-git -C "$fixture" tag v0.0.0-test
+git -C "$fixture" tag v0.1.0
 
 copy() {
 	local destination=$1
 	shift
-	copier copy --defaults --vcs-ref v0.0.0-test \
+	copier copy --defaults --vcs-ref v0.1.0 \
 		-d project_name=demo-app -d description=Demo "$@" "$fixture" "$destination"
 }
 
@@ -81,7 +81,7 @@ config = tomllib.loads((project / 'fnox.toml').read_text())
 assert config['import'] == ['.config/fnox/provider.toml']
 assert config['secrets'] == {}
 answers = (project / '.copier-answers.base.yml').read_text()
-assert '_commit: v0.0.0-test' in answers
+assert '_commit: v0.1.0' in answers
 assert f'_src_path: {fixture}' in answers
 assert 'project_slug: demo-app' in answers
 assert 'backend = "rbw"' not in answers
@@ -184,10 +184,10 @@ provider.write_text(provider.read_text().replace('folder = {{ secrets_folder | t
 PY
 git -C "$fixture" add .
 git -C "$fixture" -c core.hooksPath=/dev/null commit -m 'feat: update provider layer'
-git -C "$fixture" tag v0.0.1-test
+git -C "$fixture" tag v0.2.0
 (
 	cd "$project"
-	copier update --defaults --answers-file .copier-answers.base.yml --vcs-ref v0.0.1-test
+	copier update --defaults --answers-file .copier-answers.base.yml --vcs-ref v0.2.0
 )
 for file in project.just fnox.toml README.md .agents/project.md .agents/sandbox.toml .omp/permissions.json; do
 	cmp "$project/$file" "$work/preserved/$(basename "$file")"
@@ -200,7 +200,7 @@ import tomllib
 project = pathlib.Path(sys.argv[1])
 provider = tomllib.loads((project / '.config/fnox/provider.toml').read_text())['providers']['vault']
 assert provider['folder'] == 'updated-folder'
-assert '_commit: v0.0.1-test' in (project / '.copier-answers.base.yml').read_text()
+assert '_commit: v0.2.0' in (project / '.copier-answers.base.yml').read_text()
 assert not list(project.rglob('*.rej'))
 assert (project / 'CLAUDE.md').is_symlink()
 PY
