@@ -1,0 +1,11 @@
+# Project context: {{ project_name }}
+
+{{ description }}
+
+Owner: {{ owner }}
+Project slug: `{{ project_slug }}`
+
+This file is project-owned after the first render. Record domain constraints,
+architecture entry points, and explicitly authorized live targets here.
+Use `just check` for offline validation. Live work requires explicit permission
+and must use `fnox exec -- COMMAND`; never record credential values in this file.

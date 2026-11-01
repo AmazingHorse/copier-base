@@ -1,0 +1,52 @@
+{
+  "allow": [
+    "pwd",
+    "ls",
+    "rg",
+    "grep",
+    "fd",
+    "cat",
+    "git status",
+    "git diff",
+    "git log",
+    "git show",
+    "git rev-parse",
+    "git ls-files",
+    "just --list",
+    "just check",
+    "just lint",
+    "just test",
+    "pre-commit run"
+  ],
+  "ask": [
+    "sudo",
+    "doas",
+    "rm",
+    "chmod",
+    "chown",
+    "git push",
+    "git reset",
+    "git clean",
+    "git checkout",
+    "git rebase",
+    "git commit",
+    "curl",
+    "wget",
+    "ssh",
+    "scp",
+    "fnox exec",
+    "just setup",
+    "just smoke",
+    "just doctor"
+  ],
+  "deny": [
+    "rm -rf /",
+    "rm -rf ~",
+    "rm -rf $HOME",
+    "mkfs",
+    "shutdown",
+    "reboot"
+  ],
+  "allowOutside": [],
+  "allowedPaths": []
+}

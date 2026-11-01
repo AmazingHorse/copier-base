@@ -1,0 +1,43 @@
+_min_copier_version: "9.19.1"
+_subdirectory: template
+_answers_file: .copier-answers.base.yml
+_templates_suffix: .jinja
+_preserve_symlinks: true
+_skip_if_exists:
+  - fnox.toml
+  - project.just
+  - README.md
+  - .agents/project.md
+  - .agents/sandbox.toml
+  - .omp/permissions.json
+
+project_name:
+  type: str
+  help: Human-readable project name
+project_slug:
+  type: str
+  default: "{{ project_name | lower | replace(' ', '-') }}"
+  validator: "{% if not (project_slug | regex_search('^[a-z][a-z0-9-]+$')) %}Use a lowercase slug beginning with a letter and containing at least two letters, digits or hyphens.{% endif %}"
+description:
+  type: str
+  default: ""
+owner:
+  type: str
+  default: AmazingHorse
+license:
+  type: str
+  choices: [MIT, none]
+  default: MIT
+secrets_folder:
+  type: str
+  default: proj
+bw_profile:
+  type: str
+  default: ""
+bw_backend:
+  type: str
+  choices: [rbw, bw]
+  default: rbw
+ci:
+  type: bool
+  default: true

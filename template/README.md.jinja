@@ -1,0 +1,45 @@
+# {{ project_name }}
+
+{{ description }}
+
+Owner: {{ owner }}
+
+## Getting started
+
+Requires Git, Bash and mise. `just setup` installs pinned tools and Git hooks;
+`just check` runs the offline, secret-free lint and test gate. `just --list` lists
+available recipes. `just fmt` formats; `just doctor` checks tool/config presence offline.
+`just smoke` is opt-in for live systems and never runs in CI.
+
+## Customization and template updates
+
+Put project recipes in `project.just`: project overrides archetype overrides base.
+Archetype tools extend `mise.toml` through `.config/mise/conf.d/`.
+Keep `.copier-answers.base.yml` and any archetype answers separate. Commit local
+changes, then update the base with:
+
+```sh
+copier update --answers-file .copier-answers.base.yml --vcs-ref v0.1.0
+just check
+```
+
+`project.just`, `fnox.toml`, `README.md`, `.agents/project.md` and workspace policy
+starters are preserved when present; review base-owned changes during updates.
+
+## Secrets
+
+`fnox.toml` is project-owned and imports `.config/fnox/provider.toml`. Store only
+references such as `TOKEN = { provider = "vault", value = "{{ project_slug }}/TOKEN" }`.
+Bitwarden folder: {{ secrets_folder }}; item: {{ project_slug }}; fields: variable names.
+Backend: `{{ bw_backend }}`{% if bw_profile %}, profile: `{{ bw_profile }}`{% endif %}.
+Unlock the vault separately, and wrap only live operations with `fnox exec --`.
+Never run vault unlock, network provisioning or `just smoke` from `just check`.
+`just doctor` never resolves vault entries. Run `fnox check` only as a separately
+authorized live gate when vault access is intended.
+
+## Agent guidance
+
+Read `AGENTS.md` (also available through relative `CLAUDE.md`) and any archetype
+notes. `.omp/permissions.json` follows portable omp policy; local grants belong in
+ignored `.omp/permissions.local.json`. Sandbox configuration describes intent,
+not enforcement. Never commit credentials or widen access implicitly.

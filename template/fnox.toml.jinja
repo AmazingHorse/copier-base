@@ -1,0 +1,7 @@
+#:schema https://fnox.jdx.dev/schema.json
+import = [".config/fnox/provider.toml"]
+
+[secrets]
+# Bitwarden folder: {{ secrets_folder | to_json }}, item: {{ project_slug | to_json }}.
+# Each variable is a custom field. Always include provider = "vault".
+# EXAMPLE_TOKEN = { provider = "vault", value = "{{ project_slug }}/EXAMPLE_TOKEN" }

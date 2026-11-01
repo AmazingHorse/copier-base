@@ -1,0 +1,15 @@
+# Local secrets and agent decisions must never be committed.
+.env
+.env.*
+!.env.example
+fnox.local.toml
+fnox.*.local.toml
+.omp/permissions.local.json
+.omp/sessions/
+.mise.local.toml
+mise.local.toml
+__pycache__/
+.venv/
+*.pyc
+*.rej
+.DS_Store

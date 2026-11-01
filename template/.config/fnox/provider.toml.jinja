@@ -1,0 +1,8 @@
+#:schema https://fnox.jdx.dev/schema.json
+[providers.vault]
+type = "bitwarden"
+backend = {{ bw_backend | to_json }}
+folder = {{ secrets_folder | to_json }}
+{% if bw_backend == "rbw" %}auth_command = "rbw unlock"
+{% endif %}{% if bw_profile %}profile = {{ bw_profile | to_json }}
+{% endif -%}
