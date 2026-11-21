@@ -106,6 +106,40 @@ git -C "$project" -c core.hooksPath=/dev/null commit -m 'feat: create generated 
 	actionlint
 )
 
+# Whitespace and EOF hooks ignore DXF/SVG exports while still checking normal text.
+mkdir -p "$project/assets"
+printf '0\nSECTION  \nEOF' >"$project/assets/part.dxf"
+printf '<svg>  </svg>' >"$project/assets/diagram.svg"
+printf '<svg>  </svg>' >"$project/assets/UPPER.SVG"
+git -C "$project" add assets/part.dxf assets/diagram.svg assets/UPPER.SVG
+(
+	cd "$project"
+	pre-commit run end-of-file-fixer --all-files
+	pre-commit run trailing-whitespace --all-files
+)
+python3 - "$project" <<'PY'
+import pathlib
+import sys
+
+project = pathlib.Path(sys.argv[1])
+assert (project / 'assets/part.dxf').read_bytes() == b'0\nSECTION  \nEOF'
+assert (project / 'assets/diagram.svg').read_bytes() == b'<svg>  </svg>'
+assert (project / 'assets/UPPER.SVG').read_bytes() == b'<svg>  </svg>'
+PY
+printf 'trailing space  ' >"$project/plain.txt"
+if (cd "$project" && pre-commit run end-of-file-fixer --files plain.txt >/dev/null 2>&1); then
+	printf 'end-of-file-fixer unexpectedly ignored plain.txt\n' >&2
+	exit 1
+fi
+printf 'trailing space  \n' >"$project/plain.txt"
+if (cd "$project" && pre-commit run trailing-whitespace --files plain.txt >/dev/null 2>&1); then
+	printf 'trailing-whitespace unexpectedly ignored plain.txt\n' >&2
+	exit 1
+fi
+rm -f "$project/plain.txt"
+git -C "$project" reset -q -- assets/part.dxf assets/diagram.svg assets/UPPER.SVG
+rm -rf "$project/assets"
+
 # Different backend/profile, quoted TOML values, and conditional file omission.
 bw_project="$work/bw"
 copy "$bw_project" -d bw_backend=bw -d 'bw_profile=work "vault"' \

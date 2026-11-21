@@ -7,16 +7,19 @@ repos:
         entry: check-yaml
         language: system
         types: [yaml]
+      # Exclude exported CAD/vector text assets from whitespace and EOF rewrites.
       - id: end-of-file-fixer
         name: Fix end of files
         entry: end-of-file-fixer
         language: system
         types: [text]
+        exclude: '(?i)\.(dxf|svg)$'
       - id: trailing-whitespace
         name: Trim trailing whitespace
         entry: trailing-whitespace-fixer
         language: system
         types: [text]
+        exclude: '(?i)\.(dxf|svg)$'
       - id: project-lint
         name: Project lint
         entry: just lint
